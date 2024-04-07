@@ -1,6 +1,5 @@
 #include <iostream>
 #include <cmath>
-#include <vector>
 
 using namespace std;
 
@@ -91,10 +90,19 @@ bool isBomb(){
     }
     return isEnd;
 }
-
+/*
+ * for(int x = 0; x<n; x++){
+        for(int y = 0; y<n; y++){
+            cout<<arr[x][y].size()<<" ";
+        }
+        cout<<endl;
+    }
+    cout<<endl;
+ */
 void move(){
+
     for(int i =0; i<n; i++){
-        for(int j =0 ; j<m; j++){
+        for(int j =0 ; j<n; j++){
             for(int a = 0; a < arr[i][j].size();a++){
                 Atom atom = arr[i][j][a];
                 atomMove(atom);
@@ -104,7 +112,7 @@ void move(){
     }
 
     for(int i =0; i<n; i++){
-        for(int j =0 ; j<m; j++){
+        for(int j =0 ; j<n; j++){
             for(int a = 0; a < temp[i][j].size();a++){
                 Atom atom = temp[i][j][a];
                 arr[i][j].push_back(atom);
@@ -148,3 +156,6 @@ int main() {
 
     return 0;
 }
+//5 2 8
+//5 3 3 3 5
+//3 3 10 8 6
