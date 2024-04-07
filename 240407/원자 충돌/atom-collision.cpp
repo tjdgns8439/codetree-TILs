@@ -6,99 +6,111 @@ using namespace std;
 
 int n,m,k;
 struct Atom{
-    int mg,dir,s,x,y;
+    long long mg,dir,s,x,y;
 };
-
 vector<Atom> arr[50][50];
-int dx[8] = {-1,-1,0,1,1,1,0,-1};
-int dy[8] = {0,1,1,1,0,-1,-1,-1};
+long long dx[8] = {-1,-1,0,1,1,1,0,-1};
+long long dy[8] = {0,1,1,1,0,-1,-1,-1};
+vector<Atom> temp;
+vector<Atom> bombTemp;
 
-vector<Atom> temp[50][50];
 void atomMove(Atom atom){
-    int dir = atom.dir;
-    int nx = atom.x;
-    int ny = atom.y;
-    for(int i =0; i<atom.s; i++){
-        nx = (dx[dir] + nx + n)%n;
-        ny = (dy[dir] + ny + n)%n;
-    }
+    long long dir = atom.dir;
+    long long nx = ((dx[dir]*atom.s + atom.s*n) + atom.x)%n;
+    long long ny = ((dy[dir]*atom.s + atom.s*n) + atom.y)%n;
     atom.x = nx;
     atom.y = ny;
-    temp[nx][ny].push_back(atom);
+    temp.push_back(atom);
 }
 
-void bomb(int i, int j){
-    int dir = arr[i][j][0].dir;
+bool didir[8] = {0,1,0,1,0,1,0,1};
+void bomb(long long i, long long j){
+    bool dd = didir[arr[i][j][0].dir];
     bool isEqual = true;
-    for(int x =1; x<arr[i][j].size(); x++){
+
+    for(long long x =1; x<arr[i][j].size(); x++){
         Atom a = arr[i][j][x];
-        if(a.dir != dir) {
+        if(didir[a.dir] != dd) {
             isEqual = false;
             break;
         }
     }
-    int tempM = 0;
-    int tempS = 0;
+    long long tempM = 0;
+    long long tempS = 0;
 
-    for(int x =0; x<arr[i][j].size(); x++){
+    for(long long x =0; x<arr[i][j].size(); x++){
         tempM += arr[i][j][x].mg;
         tempS += arr[i][j][x].s;
     }
     tempM /= 5;
     tempS /= arr[i][j].size();
-    arr[i][j].clear();
+
     if(tempM != 0){
         if(isEqual){
             //짝수
-            for(int idx =0; idx<8; idx++){
-                if(idx % 2 != 0) continue;
+            for(long long idx =0; idx<8; idx++){
+                if(idx % 2 == 1) continue;
                 Atom atom{};
                 atom.dir = idx;
                 atom.s = tempS;
                 atom.mg = tempM;
                 atom.x = i;
                 atom.y = j;
-                arr[i][j].push_back(atom);
+                bombTemp.push_back(atom);
             }
         }
         else{
             //홀수
-            for(int idx =0; idx<8; idx++){
-                if(idx % 2 != 1) continue;
+            for(long long idx =0; idx<8; idx++){
+                if(idx % 2 == 0) continue;
                 Atom atom{};
                 atom.dir = idx;
                 atom.s = tempS;
                 atom.mg = tempM;
                 atom.x = i;
                 atom.y = j;
-                arr[i][j].push_back(atom);
+                bombTemp.push_back(atom);
             }
         }
     }
-    else{
-        arr[i][j].clear();
-    }
 }
 
-
-bool isBomb(){
-    bool isEnd = true;
-    for(int i =0; i<n; i++){
-        for(int j =0 ; j<n; j++){
+void isBomb(){
+    for(long long i =0; i<n; i++){
+        for(long long j =0 ; j<n; j++){
             if(arr[i][j].size() > 1 ){
                 bomb(i, j);
-                isEnd = false;
+                arr[i][j].clear();
             }
         }
     }
-    return isEnd;
+    for(auto atom : bombTemp){
+        arr[atom.x][atom.y].push_back(atom);
+    }
+    bombTemp.clear();
+
+    return;
 }
-
-void move(){
-
+/*
+4 4 5
+1 4 7 1 2
+3 3 1 8 5
+4 3 6 10 4
+4 4 10 7 3
+ */
+void print(){
     for(int i =0; i<n; i++){
-        for(int j =0 ; j<n; j++){
-            for(int a = 0; a < arr[i][j].size();a++){
+        for(int j =0; j<n; j++){
+            cout<<arr[i][j].size()<<" ";
+        }
+        cout<<endl;
+    }
+    cout<<endl;
+}
+void move(){
+    for(long long i =0; i<n; i++){
+        for(long long j =0 ; j<n; j++){
+            for(long long a = 0; a < arr[i][j].size(); a++){
                 Atom atom = arr[i][j][a];
                 atomMove(atom);
             }
@@ -106,16 +118,10 @@ void move(){
         }
     }
 
-    for(int i =0; i<n; i++){
-        for(int j =0 ; j<n; j++){
-            for(int a = 0; a < temp[i][j].size();a++){
-                Atom atom = temp[i][j][a];
-                arr[i][j].push_back(atom);
-            }
-            temp[i][j].clear();
-        }
+    for(auto atom : temp){
+        arr[atom.x][atom.y].push_back(atom);
     }
-
+    temp.clear();
     isBomb();
 }
 
@@ -123,25 +129,27 @@ int main() {
     ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 
     cin>>n>>m>>k;
-    for(int i =0; i<m; i++){
-        int x, y, mg, s, d;
+    for(long long i =0; i<m; i++){
+        long long x, y, mg, s, d;
         cin>>x>>y>>mg>>s>>d;
         Atom atom{};
-        atom.mg = mg;
-        atom.dir = d;
         atom.x = x-1;
         atom.y = y-1;
+        atom.mg = mg;
         atom.s = s;
-        arr[x-1][y-1].push_back(atom);
+        atom.dir = d;
+        arr[atom.x][atom.y].push_back(atom);
     }
 
-    for(int i =0; i<k; i++){
+    for(long long test =0; test<k; test++){
         move();
+//        print();
     }
-    int sum = 0;
-    for(int i =0; i<n; i++){
-        for(int j = 0; j<n; j++){
-            for(int t = 0; t<arr[i][j].size(); t++){
+
+    long long sum = 0;
+    for(long long i =0; i<n; i++){
+        for(long long j = 0; j<n; j++){
+            for(long long t = 0; t<arr[i][j].size(); t++){
                 sum += arr[i][j][t].mg;
             }
         }
@@ -151,6 +159,3 @@ int main() {
 
     return 0;
 }
-//5 2 8
-//5 3 3 3 5
-//3 3 10 8 6
