@@ -22,6 +22,8 @@ void atomMove(Atom atom){
         nx = (dx[dir] + nx + n)%n;
         ny = (dy[dir] + ny + n)%n;
     }
+    atom.x = nx;
+    atom.y = ny;
     temp[nx][ny].push_back(atom);
 }
 
@@ -91,15 +93,7 @@ bool isBomb(){
     }
     return isEnd;
 }
-/*
- * for(int x = 0; x<n; x++){
-        for(int y = 0; y<n; y++){
-            cout<<arr[x][y].size()<<" ";
-        }
-        cout<<endl;
-    }
-    cout<<endl;
- */
+
 void move(){
 
     for(int i =0; i<n; i++){
