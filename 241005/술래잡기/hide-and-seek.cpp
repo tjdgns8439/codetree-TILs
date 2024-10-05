@@ -6,7 +6,7 @@ int N;
 int M, H;
 int K;
 int t = 0;
-int dx[4] = {1,0,-1,0};
+int dx[4] = {-1,0,1,0};
 int dy[4] = {0,1,0,-1};
 int NORTH = 0;
 int EAST = 1;
@@ -43,9 +43,7 @@ bool runPossible(int x1, int y1,int x2, int y2 ){//거리 3인지
 }
 
 
-void run(RUNNER &runnerNum, int dir){ // 가로, 세로로 움직임
-    //만약 1칸 움직여서 격자 벗어나지 않는다면
-    //만약만약 술래 있으면 움직이지 않음. 없으면 움직임
+void run(RUNNER &runnerNum, int dir){
     
     int tempI = runnerNum.curI + dx[dir];
     int tempJ = runnerNum.curJ + dy[dir];
