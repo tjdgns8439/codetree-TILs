@@ -15,7 +15,8 @@ int WEST = 3;
 int p = 0;
 
 //북 동 남 서
-//서 북 동 남
+//동 북 서 남
+//1  0 3  2
 
 vector<pair<int,int>> order;
 int curOrder = 0;
@@ -68,8 +69,8 @@ void run(RUNNER &runnerNum, int dir){
     }
 }
 void runCatcher(int dist, int dir){
-    curCatcher.first = curCatcher.first + dx[dir];
-    curCatcher.second = curCatcher.second + dy[dir];
+    curCatcher.first = curCatcher.first + dx[dir]*dist;
+    curCatcher.second = curCatcher.second + dy[dir]*dist;
 }
 
 void point(int t){
@@ -100,6 +101,7 @@ void print(){
 }
 
 void sol(int t){
+    // cout<<"시작전"<<endl;
     // print();
     for(int i =0; i<runner.size(); i++){
         if(runner[i].curI == -1 && runner[i].curJ == -1) continue;
@@ -107,6 +109,7 @@ void sol(int t){
             run(runner[i], runner[i].dir);
         }
     }
+    // cout<<"도둑움직여"<<endl;
     // print();
 
     pair<int,int> cur = order[curOrder];
@@ -115,6 +118,7 @@ void sol(int t){
     curOrder++; curOrder = curOrder % order.size();
     point(t);
 
+    // cout<<"술래움직이고도둑잡아"<<endl;
     // print();
 }
 
@@ -127,9 +131,10 @@ void setOrder(){
     order.push_back({N-1,0});
     order.push_back({N-1,2});
     idx = 3;
+    
     for(int i=N-1; i>=1; i--){
-        order.push_back({i,idx%4}); idx++;
-        order.push_back({i,idx%4}); idx++;
+        order.push_back({i,(4-idx)%4}); idx++; idx %=4;
+        order.push_back({i,(4-idx)%4}); idx++; idx %=4;
     }
 }
 
@@ -152,6 +157,7 @@ int main() {
     curCatcher = {N/2, N/2};
     setOrder();
     for(int i =1; i<=K; i++){
+        // cout<<curCatcher.first<<" "<<curCatcher.second<<endl;
         sol(i);
     }
 
