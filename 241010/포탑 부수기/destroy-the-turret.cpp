@@ -21,32 +21,46 @@ int dy[4]  = {1,0,-1,0};
 int bombDx[8] = {0,1,1,1,0,-1,-1,-1};
 int bombDy[8] = {1,-1,0,1,-1,0,1,-1};
 
+void print(){
+    for(int i =0; i<N; i++){
+        for(int j =0; j<M; j++){
+            cout<<arr[i][j].power<<" ";
+        }
+        cout<<endl;
+    }
+    cout<<endl;
+}
+
 pair<int,int> appender;
 pair<int,int> target;
 bool visited[11][11] = {false,};
 vector<pair<int,int>> plusTop;
+bool isClear = false;
 bool comp(TOP a, TOP b){
     if(a.power != b.power) return a.power < b.power;
     if(a.time != b.time) return a.time > b.time;
     if(a.x+a.y != b.x + b.y) return a.x+a.y > b.x+b.y;
     return a.y > b.y;
 }
+
 void setAppenderAndTarget(){
     vector<TOP> v;
     for(int i =0; i<N; i++){
         for(int j =0; j<M; j++){
-            if(arr[i][j].power != 0){
+            if(arr[i][j].power > 0){
                 v.push_back(arr[i][j]);
             }
         }
     }
     sort(v.begin(), v.end(), comp);
-    //todo: v의 사이즈가 0이라면?
+    if(v.size() <= 1){
+        isClear = true;
+        return;
+    }
     appender = {v[0].x, v[0].y};
     arr[appender.first][appender.second].power = arr[appender.first][appender.second].power + N + M;
     target = {v[v.size()-1].x, v[v.size()-1].y};
     arr[appender.first][appender.second].time = t;
-
 
 }
 int dist[11][11] = {0,};
@@ -93,14 +107,10 @@ void laser(){
     arr[cur.first][cur.second].power -= minus;
 
     while(true){
-        if(cur.first == appender.first && cur.second == appender.second){
-            break;
-        }
-        else{
-            cur = parent[cur.first][cur.second];
-            temp[cur.first][cur.second] = true;
-            arr[cur.first][cur.second].power -= (minus/2);
-        }
+        cur = parent[cur.first][cur.second];
+        temp[cur.first][cur.second] = true;
+        if(cur.first == appender.first && cur.second == appender.second) break;
+        arr[cur.first][cur.second].power -= (minus/2);
     }
     for(int i =0; i<N; i++){
         for(int j = 0; j<M; j++){
@@ -115,6 +125,7 @@ void laser(){
 void bomb(){
     bool temp[11][11] = {false,};
     int minus = arr[appender.first][appender.second].power;
+    arr[target.first][target.second].power -= minus;
     for(int d =0; d<8; d++){
         int nx = bombDx[d] + target.first;
         int ny = bombDy[d] + target.second;
@@ -127,7 +138,7 @@ void bomb(){
         }
         else {
             temp[nx][ny] = true;
-            arr[nx][ny].power -= minus;
+            arr[nx][ny].power -= (minus/2);
         }
     }
     for(int i =0; i<N; i++){
@@ -149,7 +160,7 @@ void append(){
     else bomb();
 
     for(int i =0; i<plusTop.size(); i++){
-        arr[plusTop[i].first][plusTop[i].second].power ++;
+        arr[plusTop[i].first][plusTop[i].second].power++;
     }
 
     reset();
@@ -158,7 +169,12 @@ void append(){
 void sol(){
     t++;
     setAppenderAndTarget();
+    if(isClear) return;
+//    cout<<"set"<<endl;
+//    print();
     append();
+//    cout<<"append"<<endl;
+//    print();
 }
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
