@@ -21,18 +21,19 @@ int dy[4]  = {1,0,-1,0};
 int bombDx[8] = {0,1,1,1,0,-1,-1,-1};
 int bombDy[8] = {1,-1,0,1,-1,0,1,-1};
 
+
+pair<int,int> appender;
+pair<int,int> target;
 void print(){
     for(int i =0; i<N; i++){
         for(int j =0; j<M; j++){
-            cout<<arr[i][j].power<<" ";
+            cout<<setw(6)<<arr[i][j].power<<" ";
         }
         cout<<endl;
     }
     cout<<endl;
 }
 
-pair<int,int> appender;
-pair<int,int> target;
 bool visited[11][11] = {false,};
 vector<pair<int,int>> plusTop;
 bool isClear = false;
@@ -118,7 +119,7 @@ void laser(){
             if( i == target.first && j == target.second) continue;
             if( arr[i][j].power <= 0) continue;
             if( temp[i][j] ) continue;
-            plusTop.push_back({i,j});
+            plusTop.emplace_back(i,j);
         }
     }
 }
@@ -170,7 +171,7 @@ void sol(){
     t++;
     setAppenderAndTarget();
     if(isClear) return;
-//    cout<<"set"<<endl;
+//    cout<<"set:"<<appender.first<<" "<<appender.second<<endl;
 //    print();
     append();
 //    cout<<"append"<<endl;
@@ -192,7 +193,7 @@ int main(){
     }
     int result = 0;
     for(int i =0; i< N; i++){
-        for(int j = 0; j<N; j++){
+        for(int j = 0; j<M; j++){
             result = max(result,arr[i][j].power);
         }
     }
