@@ -6,6 +6,7 @@
 #include <queue>
 #include <set>
 #include <unordered_map>
+#include <unordered_set>
 
 #define endl '\n'
 using namespace std;
@@ -25,7 +26,7 @@ struct Point{
     int x; int y;
 };
 
-set<int> pidList;
+unordered_set<int> pidList;
 vector<RABBIT> scoreRabbit;
 unordered_map<int,RABBIT> rabbitList;
 
