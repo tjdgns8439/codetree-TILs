@@ -58,7 +58,6 @@ void move(){
             v[i].x = -1;
         }
     }
-    
 //    v.clear();
 //    v.assign(temp.begin(), temp.end());
 }
@@ -129,7 +128,7 @@ SQUARE setSquare(){
             }
         }
     }
-    if(temp.empty()) return {-1,-1,1};
+    if(temp.empty()) return {-1,-1,-1};
     sort(temp.begin(), temp.end(),comp);
 
     return temp[0];
@@ -163,7 +162,7 @@ void sol(){
     for(int i =0; i<K; i++){
         move();
         SQUARE s = setSquare();
-        if(s.x == -1 && s.y==-1 &&s.d == -1) return;
+        if(s.x == -1 && s.y==-1 && s.d == -1) return;
         rotate(s.x,s.y,s.d);
     }
 }
