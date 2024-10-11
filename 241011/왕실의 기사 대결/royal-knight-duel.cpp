@@ -21,9 +21,23 @@ int personMap[51][51] = {0,}; //사람 정보
 int firstPersonK[51] = {0,}; //사람 정보
 int result = 0;
 
+void print(){
+    for(int i =0; i<L; i++){
+        for(int j =0; j<L; j++){
+            cout<<setw(5)<<personMap[i][j]<<" ";
+        }
+        cout<<endl;
+    }
+    cout<<endl;
+    for(int i =1; i<=N; i++){
+        cout<<"person k: "<<personList[i].k<<" ";
+    }
+    cout<<endl;
+}
 bool isRange(int i, int j){
     return i>=0 & j>=0 && i<L && j<L && chess[i][j] != 2;
 }
+
 int curIdx = 0;
 vector<int> v;
 void move(int idx, int d){
@@ -54,16 +68,16 @@ void move(int idx, int d){
 }
 bool can_move(int idx, int d){ //내려가면서 마주친 애들 모두
     //상우좌하
-    PERSON curPerson = personList[idx];
+    PERSON* person = &personList[idx];
     //상
-    for(int i = curPerson.x; i < curPerson.x + curPerson.h; i++){
-        for(int j = curPerson.y; j < curPerson.y + curPerson.w; j++ ){
-            int nx = dx[d] + i;
-            int ny = dy[d] + j;
+    for(int x = person->x; x<person->x+person->h; x++){
+        for(int y = person->y; y<person->y + person->w; y++){
+            int nx = dx[d] + x;
+            int ny = dy[d] + y;
             if(!isRange(nx,ny)){
                 return false;
             }
-            if( personMap[nx][ny] != 0 && personMap[nx][ny] != idx) {
+            else if( personMap[nx][ny] != 0 && personMap[nx][ny] != idx) {
                 if(!can_move(personMap[nx][ny], d) ) return false;
             }
         }
@@ -81,7 +95,7 @@ void deletePerson(int idx){
         }
     }
     person->k -= cnt;
-    if(person->k < 0){
+    if(person->k <= 0){
         person->k = 0;
         for(int x = person->x; x<person->x+person->h; x++){
             for(int y = person->y; y<person->y + person->w; y++){
@@ -134,10 +148,25 @@ int main() {
         result = result + firstPersonK[i] - personList[i].k;
     }
 
-
-
+    print();
 
     cout<<result;
 
     return 0;
 }
+//
+//4 3 7
+//0 0 1 0
+//0 0 1 0
+//1 1 0 1
+//0 0 2 0
+//1 2 2 1 5
+//2 1 2 1 1
+//3 2 1 2 3
+//1 2
+//2 1
+//3 3
+//2 1
+//3 3
+//1 2
+//3 1
