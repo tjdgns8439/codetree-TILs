@@ -134,36 +134,40 @@ SQUARE setSquare(){
     return temp[0];
 }
 
-//void print(){
-//    for(int i =0; i<N; i++){
-//        for(int j = 0; j<N; j++){
-//            if(i == EXIT.first && j==EXIT.second) cout<<setw(5)<<"EXIT"<<" ";
-//            else{
-//                bool flag = false;
-//                for(int q = 0; q<v.size(); q++){
-//                    if(v[q].x == i && v[q].y == j) {
-//                        cout<<setw(5)<<"P"<<" ";
-//                        flag = true;
-//                    }
-//                }
-//                if(!flag) cout<<setw(5)<<arr[i][j]<<" ";
-//            }
-//
-//        }
-//        cout<<endl;
-//    }
-//    cout<<endl;
-//    for(int i =0; i<v.size(); i++){
-//        cout<<v[i].x<<" "<<v[i].y<<endl;
-//    }
-//}
+void print(){
+    for(int i =0; i<N; i++){
+        for(int j = 0; j<N; j++){
+            if(i == EXIT.first && j==EXIT.second) cout<<setw(5)<<"EXIT"<<" ";
+            else{
+                bool flag = false;
+                for(int q = 0; q<v.size(); q++){
+                    if(v[q].x == i && v[q].y == j) {
+                        cout<<setw(5)<<"P"<<" ";
+                        flag = true;
+                    }
+                }
+                if(!flag) cout<<setw(5)<<arr[i][j]<<" ";
+            }
+
+        }
+        cout<<endl;
+    }
+    cout<<endl;
+    for(int i =0; i<v.size(); i++){
+        cout<<v[i].x<<" "<<v[i].y<<endl;
+    }
+}
 
 void sol(){
     for(int i =0; i<K; i++){
         move();
+    
+
         SQUARE s = setSquare();
         if(s.x == -1 && s.y==-1 && s.d == -1) return;
+        
         rotate(s.x,s.y,s.d);
+        
     }
 }
 
@@ -187,20 +191,20 @@ int main() {
     int r,c;
     cin>>r>>c;
     EXIT = {r-1,c-1};
+
     sol();
     cout<<result<<endl;
     cout<<EXIT.first+1<<" "<<EXIT.second+1;
 
     return 0;
 }
-//5 4 8
-//0 0 0 0 1
-//9 2 0 0 0
-//0 0 0 0 0
-//0 0 0 1 0
-//0 0 0 0 0
-//1 3
-//3 1
-//3 5
-//2 4
+//4 3 8
+//0 0 0 0
+//9 2 2 0
+//0 1 0 1
+//0 0 0 1
+//1 1
+//1 4
+//4 1
+//4 3
 //3 3
